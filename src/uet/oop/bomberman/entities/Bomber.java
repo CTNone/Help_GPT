@@ -12,16 +12,16 @@ public class Bomber extends Entity {
         super( x, y, img);
     }
     public void moveUp(){
-        y-=10;
+        y-=5;
     }
     public void moveDown(){
-        y+=10;
+        y+=5;
     }
     public void moveLeft(){
-        x-=10;
+        x-=5;
     }
     public void moveRight(){
-        x+=10;
+        x+=5;
     }
 
     @Override

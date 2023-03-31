@@ -20,7 +20,7 @@ import java.util.Scanner;
 public class BombermanGame extends Application {
     
     public static final int WIDTH = 20; // rộng
-    public static final int HEIGHT = 15; // dài
+    public static final int HEIGHT = 14; // dài
     private GraphicsContext gc;
     private Canvas canvas; //CTN: sử duụng GraphicsContext và  Canvas để vẽ các đối tượng lên màn hình
     private List<Entity> entities = new ArrayList<>();
@@ -31,10 +31,6 @@ public class BombermanGame extends Application {
 
     @Override
     public void start(Stage stage) { // khởi tạo trò chơi
-
-
-          // System.out.println("Loi doc file");
-
 
 
         // Tao Canvas, < CTN: tạo cửa sổ >
@@ -60,7 +56,7 @@ public class BombermanGame extends Application {
         timer.start();
         createMap();
        // int x=18, y=13;
-        Bomber bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
+        Bomber bomberman = new Bomber(1, 2, Sprite.player_right.getFxImage());
         entities.add(bomberman); // thêm bomberman vào danh sách khi đó  sẽ được vẽ và cập nhật trong trò chơi.
 
         scene.setOnKeyPressed(e -> { // di chuyển
@@ -103,7 +99,7 @@ public class BombermanGame extends Application {
         }
        */
         // Mở file map.txt
-        File file = new File("D:\\my_first_project\\Help_GPT\\src\\uet\\oop\\bomberman");
+        File file = new File("src/uet/oop/bomberman/levels/level 1.txt").getAbsoluteFile();
         Scanner scanner = null;
         try {
             scanner = new Scanner(file);
@@ -129,17 +125,16 @@ public class BombermanGame extends Application {
                 if (ch == '#') {
                     // Tạo đối tượng Wall tại vị trí (x, y)
                     object = new Wall(x, y, Sprite.wall.getFxImage());
-                    stillObjects.add(object);
+
                     //board.addEntity(x + y * width, wall);
                 } else if (ch == '*') {
                     // Tạo đối tượng Brick tại vị trí (x, y)
-                    object = new Brick(x, y, Sprite.wall.getFxImage());
-                    stillObjects.add(object);
+                    object = new Brick(x, y, Sprite.brick.getFxImage());
                 } else {
                     // Tạo đối tượng Grass tại vị trí (x, y)
-                    object = new Grass(x, y, Sprite.wall.getFxImage());
-                    stillObjects.add(object);
+                    object = new Grass(x, y, Sprite.grass.getFxImage());
                 }
+                stillObjects.add(object);
             }
         }
 
