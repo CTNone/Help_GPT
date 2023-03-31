@@ -21,7 +21,7 @@ public abstract class Entity {
         this.img = img;
     }
 
-//CTN: in ra chạy phần khung;
+//CTN: in ra chạy phần khung ảnh;
     public void render(GraphicsContext gc) {
         gc.drawImage(img, x, y);
     }

@@ -7,14 +7,14 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
-import uet.oop.bomberman.entities.Bomber;
-import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.Grass;
-import uet.oop.bomberman.entities.Wall;
+import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.graphics.Sprite;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class BombermanGame extends Application {
@@ -84,11 +84,11 @@ public class BombermanGame extends Application {
         });
 
     }
-    public void createMap() { // CTN: tạo một map cho trò chơi với lưới thảm cỏ và tường đá xung quanh
-        for (int i = 0; i < WIDTH; i++) {
+    public void createMap()  { // CTN: tạo một map cho trò chơi với lưới thảm cỏ và tường đá xung quanh
+
+      /*  for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 Entity object;
-//xử lý tường đá xung quanh
                 if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1) {
                     object = new Wall(i, j, Sprite.wall.getFxImage());
                 }
@@ -96,12 +96,57 @@ public class BombermanGame extends Application {
                     object = new Grass(i, j, Sprite.grass.getFxImage());
                 }
 
-//                if( i == 5 && j == 5 ){
-//                    object = new Wall(i, j, Sprite.brick.getFxImage());
 //                }
+
                 stillObjects.add(object); // `Wall` và `Grass được lưu trong stillObject
             }
         }
+       */
+        // Mở file map.txt
+        File file = new File("D:\\my_first_project\\Help_GPT\\src\\uet\\oop\\bomberman");
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+// Đọc nội dung file vào một danh sách các chuỗi
+        List<String> lines = new ArrayList<>();
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            lines.add(line);
+        }
+
+// Duyệt từng chuỗi trong danh sách
+        for (int y = 0; y < lines.size(); y++) {
+            String line = lines.get(y);
+
+            // Tạo đối tượng Wall hoặc Brick tại mỗi vị trí
+            for (int x = 0; x < line.length(); x++) {
+                char ch = line.charAt(x);
+                Entity object;
+                if (ch == '#') {
+                    // Tạo đối tượng Wall tại vị trí (x, y)
+                    object = new Wall(x, y, Sprite.wall.getFxImage());
+                    stillObjects.add(object);
+                    //board.addEntity(x + y * width, wall);
+                } else if (ch == '*') {
+                    // Tạo đối tượng Brick tại vị trí (x, y)
+                    object = new Brick(x, y, Sprite.wall.getFxImage());
+                    stillObjects.add(object);
+                } else {
+                    // Tạo đối tượng Grass tại vị trí (x, y)
+                    object = new Grass(x, y, Sprite.wall.getFxImage());
+                    stillObjects.add(object);
+                }
+            }
+        }
+
+// Đóng file
+        scanner.close();
+
+
     }
 
     public void update() { //CTN: cập nhật thông tin mới nhất về các đối tượng
