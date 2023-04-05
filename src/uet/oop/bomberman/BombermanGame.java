@@ -19,8 +19,8 @@ import java.util.Scanner;
 
 public class BombermanGame extends Application {
     
-    public static final int WIDTH = 20; // rộng
-    public static final int HEIGHT = 14; // dài
+    public static final int WIDTH = 31;//20; // rộng
+    public static final int HEIGHT = 14;//14; // dài
     private GraphicsContext gc;
     private Canvas canvas; //CTN: sử duụng GraphicsContext và  Canvas để vẽ các đối tượng lên màn hình
     private List<Entity> entities = new ArrayList<>();
@@ -55,12 +55,11 @@ public class BombermanGame extends Application {
         };
         timer.start();
         createMap();
-       // int x=18, y=13;
+
         Bomber bomberman = new Bomber(1, 2, Sprite.player_right.getFxImage());
         entities.add(bomberman); // thêm bomberman vào danh sách khi đó  sẽ được vẽ và cập nhật trong trò chơi.
 
-        scene.setOnKeyPressed(e -> { // di chuyển
-
+        scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case UP:
                     bomberman.moveUp();
@@ -80,25 +79,7 @@ public class BombermanGame extends Application {
         });
 
     }
-    public void createMap()  { // CTN: tạo một map cho trò chơi với lưới thảm cỏ và tường đá xung quanh
-
-      /*  for (int i = 0; i < WIDTH; i++) {
-            for (int j = 0; j < HEIGHT; j++) {
-                Entity object;
-                if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1) {
-                    object = new Wall(i, j, Sprite.wall.getFxImage());
-                }
-                else {
-                    object = new Grass(i, j, Sprite.grass.getFxImage());
-                }
-
-//                }
-
-                stillObjects.add(object); // `Wall` và `Grass được lưu trong stillObject
-            }
-        }
-       */
-        // Mở file map.txt
+    public void createMap()  { // CTN: tạo một map
         File file = new File("src/uet/oop/bomberman/levels/level 1.txt").getAbsoluteFile();
         Scanner scanner = null;
         try {
@@ -143,7 +124,6 @@ public class BombermanGame extends Application {
 
 
     }
-
     public void update() { //CTN: cập nhật thông tin mới nhất về các đối tượng
         entities.forEach(Entity::update); //CTN: duyệt qua từng đối tượng trong entities
     }
@@ -155,8 +135,6 @@ public class BombermanGame extends Application {
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
-        //new MyFrame();
-        //MyFrame() F = new My;
 
     }
 }
