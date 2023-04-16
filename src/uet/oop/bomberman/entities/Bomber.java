@@ -12,15 +12,21 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-public class Bomber extends Entity {
+public class Bomber extends Animal {
 
-    public Bomber(int x, int y, Image img) {
-        super( x, y, img);
-    }
     private int direction; // Thuộc tính lưu giữ hướng di chuyển của Bomber sẽ được sd ở render
-    private Image image; // Thuộc tính để lưu trữ hình ảnh của Bomber tại mỗi thời điểm
+    private Image image;
 
-    public void moveUp(){
+    public Bomber(int is_move, int swap, String direction, int count, int count_to_run) {
+        super(8, 1, "down", 0, 0);
+    }
+    public Bomber(int x, int y, Image img) {
+        super(x, y, img);
+    }
+    public Bomber() { }
+
+
+  /*  public void moveUp(){
 
         y-=5;
         direction = 0; //len
@@ -39,41 +45,84 @@ public class Bomber extends Entity {
     }
 
 
-    public void render(GraphicsContext gc) {
+   */
+
+  /*  public void render(GraphicsContext gc) {
         switch (direction) {
             case 0:
-                loadImageUp();
+                if( y % 3 == 0) loadImageUp();
+                if( y % 3 == 1) loadImageUp1();
+                if( y % 3 == 2) loadImageUp2();
                 break;
             case 1:
-                loadImageRight();
+
+                if( x% 3 == 0 ) loadImageRight();
+                if( x% 3 == 1 ) loadImageRight1();
+                if( x% 3 == 2 ) loadImageRight2();
                 break;
             case 2:
-                loadImageDown();
+                if( y % 3 == 0) loadImageDown();
+                if( y % 3 == 1) loadImageDown1();
+                if( y % 3 == 2) loadImageDown2();
                 break;
             case 3:
-                loadImageLeft();
+
+                if( x % 3 == 0) loadImageLeft();
+                if( x % 3 == 1) loadImageLeft1();
+                if( x % 3 == 2) loadImageLeft1();
                 break;
         }
+        System.out.println(x+ " "+ y);
         gc.drawImage( image, x, y );
+
     }
 
     public void loadImageUp() {
         image =  Sprite.player_up.getFxImage();
     }
+    public void loadImageUp1() {
+        image =  Sprite.player_up_1.getFxImage();
+    }
+    public void loadImageUp2() {
+        image =  Sprite.player_up_2.getFxImage();
+    }
 
     public void loadImageLeft() {
         image = Sprite.player_left.getFxImage();
+    }
+    public void loadImageLeft1() {
+        image = Sprite.player_left_1.getFxImage();
+    }
+    public void loadImageLeft2() {
+        image = Sprite.player_left_2.getFxImage();
     }
 
     public void loadImageRight() {
         image = Sprite.player_right.getFxImage();
     }
+    public void loadImageRight1() {
+        image = Sprite.player_right_1.getFxImage();
+    }
+    public void loadImageRight2() {
+        image = Sprite.player_right_2.getFxImage();
+    }
     public void loadImageDown() {
         image = Sprite.player_down.getFxImage();
     }
+    public void loadImageDown1() {
+        image = Sprite.player_down_1.getFxImage();
+    }
+    public void loadImageDown2() {
+        image = Sprite.player_down_2.getFxImage();
+    }
+
+   */
+    
 
     @Override
     public void update() {
 
     }
+
+
 }
