@@ -50,7 +50,7 @@ public class BombermanGame extends Application {
         Group root = new Group(); // khởi tạo Group trống
 
         block.clear();
-        new createMap("res/levels/Level1.txt" );
+        new createMap("res/levels/Level1.txt");
         player.setLife(true);
          player.setX(32);
          player.setY(32);
@@ -58,7 +58,7 @@ public class BombermanGame extends Application {
         root.getChildren().add(canvas); // thêm đối tượng Canvas vào Group
         Scene scene = new Scene(root); // Tạo ra một `Scene` mới bằng cách truyền `Group` đã tạo vào `Scene`
 
-        scene.setOnKeyPressed(event -> { // giữ phím
+        scene.setOnKeyReleased(event -> { // giữ phím
             if(player.isLife()) {
                 switch (event.getCode()) {
                     case DOWN:

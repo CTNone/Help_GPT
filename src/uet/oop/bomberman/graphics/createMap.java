@@ -8,18 +8,18 @@ import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Grass;
 import uet.oop.bomberman.entities.Wall;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class createMap {
-    public createMap(String level) {
+//    public createMap(String s) {
+//    }
+
+    public void createMap(String filename) {
         System.out.println(System.getProperty("user.dir"));
-        final File fileName = new File(level);                      // Create object fileName from class File in File library imported.
-        try (FileReader inputFile = new FileReader(fileName)) {     // Try to create new object from class FileReader.
-            Scanner ip = new Scanner(inputFile);                    // Create object ip from class Scanner.
+        try {
+            FileReader reader = new FileReader(filename); // khai báo để đọc tệp dữ liệu
+            Scanner ip = new Scanner(reader);                    // Create object ip from class Scanner.
             String line = ip.nextLine();                            // Input variable line in string data type.
 
             StringTokenizer tokens = new StringTokenizer(line);     // Create object tokens from class StringTokenizer in library imported.
@@ -28,10 +28,7 @@ public class createMap {
             BombermanGame.level = Integer.parseInt(tokens.nextToken());   // To refer to variable level in main file.
             height = Integer.parseInt(tokens.nextToken());
             width = Integer.parseInt(tokens.nextToken());
-            id_objects = new char[width][height];                 // Create new object id_object from main file.
-            for(int i = 0; i < height; i++) {
-                Arrays.fill(id_objects[i], ' ');
-            }
+            id_objects = new char[width][height];
 
             while (ip.hasNextLine()) {
 
@@ -40,11 +37,7 @@ public class createMap {
                     StringTokenizer tokenTile = new StringTokenizer(lineTile);      // Create object tokenTile from class StringTokenizer in library imported.
 
                     for (int j = 0; j < width; j++) {
-                        //char token = lineTile.charAt(j);
-                        char token = ' ';
-                        if (j < lineTile.length()) {
-                            token = lineTile.charAt(j);
-                        }
+                        char token = lineTile.charAt(j);
 
 //                    int j= 0;
 //                    for(char token : lineTile.toCharArray()){  // for( int j =0; j< width; j++ )
@@ -65,14 +58,16 @@ public class createMap {
                         }
                         id_objects[j][i] = token;        //
                         block.add(entity);
-                     //   j++;
+                        //   j++;
                     }
-                       System.out.println();
+                    System.out.println();
                 }
             }
-        } catch (IOException e) {                       // Catch exception
-            e.printStackTrace();                        // printStackTrace(): Help to understand where the problem is actually happening.
+            reader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println(e);
+        } catch (IOException e) {
+            System.out.println(e);
         }
     }
-
 }
