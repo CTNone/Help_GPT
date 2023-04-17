@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class Bomber extends Animal {
+    public static int swap_kill = 1;
+    private static int count_kill = 0;
 
     private int direction; // Thuộc tính lưu giữ hướng di chuyển của Bomber sẽ được sd ở render
     private Image image;

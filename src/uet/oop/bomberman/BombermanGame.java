@@ -6,7 +6,9 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import uet.oop.bomberman.control.menu;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.control.Move;
@@ -35,11 +37,9 @@ public class BombermanGame extends Application {
     public static int height = 0;// chieu dài của mảng id_object
     public static char[][] id_objects;
     public static final List<Entity> block = new ArrayList<>();     // Chứa các thực thể cố định
-    private List<Entity> entities = new ArrayList<>();
-    //  private List<Entity> stillObjects = new ArrayList<>();
 
     public static boolean running;
-//CTN : entities và stillObjects lưu trữ Bomber, Wall, Grass.
+
 
     @Override
     public void start(Stage stage) {
@@ -48,15 +48,10 @@ public class BombermanGame extends Application {
 
         // Tao root container
         Group root = new Group(); // khởi tạo Group trống
+        menu.createMenu(root);
+        root.getChildren().add(canvas);
 
-        block.clear();
-        new createMap("res/levels/Level1.txt");
-        player.setLife(true);
-         player.setX(32);
-         player.setY(32);
-
-        root.getChildren().add(canvas); // thêm đối tượng Canvas vào Group
-        Scene scene = new Scene(root); // Tạo ra một `Scene` mới bằng cách truyền `Group` đã tạo vào `Scene`
+        Scene scene = new Scene(root);
 
         scene.setOnKeyReleased(event -> { // giữ phím
             if(player.isLife()) {
