@@ -15,7 +15,7 @@ public class createMap {
 //    public createMap(String s) {
 //    }
 
-    public void createMap(String filename) {
+    public createMap(String filename) {
         System.out.println(System.getProperty("user.dir"));
         try {
             FileReader reader = new FileReader(filename); // khai báo để đọc tệp dữ liệu
@@ -36,8 +36,10 @@ public class createMap {
                     String lineTile = ip.nextLine();                // Input variable lineTile in string data type.
                     StringTokenizer tokenTile = new StringTokenizer(lineTile);      // Create object tokenTile from class StringTokenizer in library imported.
 
+                    char token =' ';
+
                     for (int j = 0; j < width; j++) {
-                        char token = lineTile.charAt(j);
+                        token = lineTile.charAt(j);
 
 //                    int j= 0;
 //                    for(char token : lineTile.toCharArray()){  // for( int j =0; j< width; j++ )
@@ -60,6 +62,7 @@ public class createMap {
                         block.add(entity);
                         //   j++;
                     }
+
                     System.out.println();
                 }
             }
