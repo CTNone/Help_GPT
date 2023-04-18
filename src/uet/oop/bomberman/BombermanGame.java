@@ -26,19 +26,20 @@ import java.util.StringTokenizer;
 
 public class BombermanGame extends Application {
 
-    public static final int WIDTH = 31;//20; // rộng
-    public static final int HEIGHT = 14;//14; // dài
-    private GraphicsContext gc;
-    public static Animal player;
-    private Canvas canvas; //CTN: sử duụng GraphicsContext và  Canvas để vẽ các đối tượng lên màn hình
-
-    public static int level = 1;// level ban đầu =1 , được gọi lần đầu trong creatmap()
+    public static final int WIDTH = 25;//31;//20; // rộng
+    public static final int HEIGHT = 15;//14; // dài
     public static int width = 0; // chieu rộng của mảng id_object, mảng này lưu trứ các đôi tượng tường, cỏ...
     public static int height = 0;// chieu dài của mảng id_object
-    public static char[][] id_objects;
+    public static int level = 1;// level ban đầu =1 , được gọi lần đầu trong creatmap()
     public static final List<Entity> block = new ArrayList<>();     // Chứa các thực thể cố định
-
+    public static char[][] id_objects; // mảng 2 chiều chứa ID của các đối tượng trên màn hình game.
+    public static Animal player;
     public static boolean running;
+
+    private GraphicsContext gc;
+
+    private Canvas canvas; //CTN: sử duụng GraphicsContext và  Canvas để vẽ các đối tượng lên màn hình
+
 
 
     @Override
@@ -50,6 +51,7 @@ public class BombermanGame extends Application {
         Group root = new Group(); // khởi tạo Group trống
         menu.createMenu(root);
         root.getChildren().add(canvas);
+
 
         Scene scene = new Scene(root);
 
