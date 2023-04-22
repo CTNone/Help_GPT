@@ -1,6 +1,6 @@
 package uet.oop.bomberman.control;
 import uet.oop.bomberman.BombermanGame;
-import uet.oop.bomberman.levels.Level1;
+import uet.oop.bomberman.levels.*;
 
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -11,12 +11,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
+import static uet.oop.bomberman.BombermanGame.*;
 
-//import Levels.*;
 public class menu {
 
-
-   // private static ImageView statusGame;
+    private static ImageView statusGame;
     public static Text level, bomb, time;
     public static int bomb_number = 20, time_number = 120;   // the number of bomb is 20 and the time limit is 120 seconds
     public static Image pauseGame, playGame;
@@ -40,39 +39,48 @@ public class menu {
         time.setX(608);
         time.setY(20);
 
-       /* Image newGame = new Image("images/startButton.png");
+        Image newGame = new Image("images/startButton.png");
         statusGame = new ImageView(newGame);
         statusGame.setX(-75);
         statusGame.setY(-10);
         statusGame.setScaleX(0.5);
         statusGame.setScaleY(0.5);
 
-        */
-
         Pane pane = new Pane();
-       // pane.getChildren().addAll(level, bomb, time, statusGame);
-        pane.getChildren().addAll(level, bomb, time);
+        pane.getChildren().addAll(level, bomb, time, statusGame);
         pane.setMinSize(800, 32);
         pane.setMaxSize(800, 480);
         pane.setStyle("-fx-background-color: #353535");
 
         root.getChildren().add(pane);
 
-     //  playGame = new Image("images/pauseButton.png");
-     //   pauseGame = new Image("images/resumeButton.png");
+        playGame = new Image("images/pauseButton.png");
+        pauseGame = new Image("images/resumeButton.png");
 
-        new Level1();
-           // running = true;
+        statusGame.setOnMouseClicked(event -> {     //Event when you click the play game button, if your character still alive, the game will pause, else the game will start at level 1
+            if (player.isLife()) { // nếu life = false
+                isPause = !isPause;
+            } else {
+                new Level1();
+                running = true;
+            }
+            updateMenu();
+        });
 
-//        statusGame.setOnMouseClicked(event -> {     //Event when you click the play game button, if your character still alive, the game will pause, else the game will start at level 1
-//            if (player.isLife()) {
-//                isPause = !isPause;
-//            } else {
-//                new Level1();
-//                running = true;
-//            }
-//            updateMenu();
-//        });
+    }
+    public static void updateMenu() { //Update menu
+        level.setText("Level: " + BombermanGame.level);
+        bomb.setText("Bombs: " + bomb_number);
 
+        if (player.isLife())
+            if (isPause) {
+                statusGame.setImage(pauseGame);
+            } else {
+                statusGame.setImage(playGame);
+            }
+        else {
+            Image newGame = new Image("images/startButton.png");
+            statusGame.setImage(newGame);
+        }
     }
 }

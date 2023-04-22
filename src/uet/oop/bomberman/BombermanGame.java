@@ -6,23 +6,23 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.Pane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import uet.oop.bomberman.control.menu;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.control.Move;
-import uet.oop.bomberman.graphics.createMap;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import java.util.StringTokenizer;
 
+
+import static uet.oop.bomberman.SoundManager.updateSound;
+import static uet.oop.bomberman.control.menu.*;
+import static uet.oop.bomberman.levels.NextLevel.waitToLevelUp;
+import static uet.oop.bomberman.levels.NextLevel.*;
+import static uet.oop.bomberman.entities.Portal.*;
 
 public class BombermanGame extends Application {
 
@@ -32,26 +32,39 @@ public class BombermanGame extends Application {
     public static int height = 0;// chieu dài của mảng id_object
     public static int level = 1;// level ban đầu =1 , được gọi lần đầu trong creatmap()
     public static final List<Entity> block = new ArrayList<>();     // Chứa các thực thể cố định
-    public static char[][] id_objects; // mảng 2 chiều chứa ID của các đối tượng trên màn hình game.
+    public static int[][] id_objects; // mảng 2 chiều chứa ID của các đối tượng trên màn hình game.
+    public static List<Animal> enemy = new ArrayList<>();
+    public static int[][] list_kill;
+
     public static Animal player;
     public static boolean running;
-
+    public static ImageView author_view;
     private GraphicsContext gc;
 
     private Canvas canvas; //CTN: sử duụng GraphicsContext và  Canvas để vẽ các đối tượng lên màn hình
 
+    private int frame = 1;
+    private long last_time;
 
+    public static Stage main_stage = null;
+    public static boolean isPause = false;
 
     @Override
     public void start(Stage stage) {
-        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT); // khởi tạo canvas
+        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
+        canvas.setTranslateY(32);
         gc = canvas.getGraphicsContext2D();
+        Image author = new Image("images/author.png");
+        author_view = new ImageView(author);
+        author_view.setX(-400);
+        author_view.setY(-208);
+        author_view.setScaleX(0.5);
+        author_view.setScaleY(0.5);
+        Group root = new Group();
 
-        // Tao root container
-        Group root = new Group(); // khởi tạo Group trống
-        menu.createMenu(root);
+        menu.createMenu(root); // Khởi chạy tu level 1   ở đây
         root.getChildren().add(canvas);
-
+        root.getChildren().add(author_view);
 
         Scene scene = new Scene(root);
 
@@ -74,22 +87,39 @@ public class BombermanGame extends Application {
                         System.out.println("right");
                         Move.right(player);
                         break;
+                    case SPACE:
+                        Bomb.putBomb();
+                        break;
+                    case P:
+                        isPause = !isPause;
+                        break;
                     /** xử lý thêm các nút như space, esc ...*/
-                    //default:
-                      //  break;
+                    default:
+                        break;
                 }
             }
         });
 
-        // Thêm scene vao stage
         stage.setScene(scene);
-        stage.show(); // hiển thị stage lên màn hình
+        stage.setTitle("Bomberman by 404 NOT FOUND");
+        Image icon = new Image("images/ttsalpha4.0@0.5x.png");
+        stage.getIcons().add(icon);
+        main_stage = stage;
+        main_stage.show();
+
+        last_time = System.currentTimeMillis();
 
         AnimationTimer timer = new AnimationTimer() { //CTN: cập nhật và hiển thị khung hình thường xuyên
             @Override
             public void handle(long l) {
-                render();
-                update();
+                if (running) {
+                    render();
+                    if(!isPause){
+                        update();
+                        time();
+                    }
+                    updateMenu();
+                }
             }
         };
         timer.start();
@@ -98,68 +128,9 @@ public class BombermanGame extends Application {
         player.setLife(false);
 
     }
-
-    /*public void createMap(){
-        File file = new File("res/levels/level 1.txt").getAbsoluteFile();
-        try (FileReader inputFile = new FileReader(file)) {     // Cố gắng tạo đối tượng mới từ lớp FileReader.
-            Scanner ip = new Scanner(inputFile);                    // Tạo ip đối tượng từ class Scanner.
-            String line = ip.nextLine();                            // Đầu vào dòng biến trong kiểu dữ liệu chuỗi.
-
-            StringTokenizer tokens = new StringTokenizer(line);     // Tạo object token từ class StringTokenizer trong thư viện imported.
-
-            //parseInt(): Phương thức phân tích cú pháp đối số chuỗi và trả về một int nguyên thủy.
-            BombermanGame.level = Integer.parseInt(tokens.nextToken());   // To refer to variable level in main file.
-            height = Integer.parseInt(tokens.nextToken());
-            width = Integer.parseInt(tokens.nextToken());
-
-            while (ip.hasNextLine()) {
-                id_objects = new int[width][height];                 // Create new object id_object from main file.
-              //  list_kill = new int[width][height];                  // Create new object lít_kill from main file.   Main file: RunBomberman.java
-                for (int i = 0; i < height; ++i) {
-                    String lineTile = ip.nextLine();                // Input variable lineTile in string data type.
-                    StringTokenizer tokenTile = new StringTokenizer(lineTile);      // Create object tokenTile from class StringTokenizer in library imported.
-                    for (int j = 0; j < width; j++) {
-                       // int token = Integer.parseInt(tokenTile.nextToken());
-                        char token = lineTile.charAt(j);
-
-                        Entity entity;                              // Create object entity from class Entity.
-
-                        // This switch statement running, and we got a full map for a game.
-                        // Through the program, in the for-loop statement, we can get the map according to each loop it passed.
-                        switch (token) {
-//                            case 1:
-//                                entity = new Portal(j, i, Sprite.grass.getFxImage());       // In case 1, set entity object equal to object portal with scaled size.
-//                                token = 0;
-//                                break;
-                            case '#':
-                                entity = new Wall(j, i, Sprite.wall.getFxImage());          // In case 2, set entity object equal to object wall with scaled size.
-                                break;
-                            case '*':
-                                entity = new Brick(j, i, Sprite.brick.getFxImage());        // In case 3, set entity object equal to object brick with scaled size.
-                                break;
-//                            case 6:
-//                                entity = new SpeedItem(j, i, Sprite.brick.getFxImage());
-//                                break;
-//                            case 7:
-//                                entity = new FlameItem(j, i, Sprite.brick.getFxImage());
-//                                break;
-                            default:
-                                entity = new Grass(j, i, Sprite.grass.getFxImage());
-                        }
-                        id_objects[j][i] = token;        //
-                        block.add(entity);              //
-                    }
-
-                }
-            }
-        } catch (IOException e) {                       // Catch exception
-            e.printStackTrace();                        // printStackTrace(): Help to understand where the problem is actually happening.
-        }
-    } */
-
     public void update() { //CTN: cập nhật thông tin mới nhất về các đối tượng
-       // entities.forEach(Entity::update); //CTN: duyệt qua từng đối tượng trong entities
         block.forEach(Entity::update);
+        enemy.forEach(Entity::update);
         player.update();
 
         player.setCountToRun(player.getCountToRun() + 1);
@@ -168,17 +139,51 @@ public class BombermanGame extends Application {
             player.setCountToRun(0);
         }
 
+        for (Animal a : enemy) {
+            a.setCountToRun(a.getCountToRun() + 1);
+            if (a.getCountToRun() == 8) {
+                Move.checkRun(a);
+                a.setCountToRun(0);
+            }
+        }
+
+        if (enemy.size() == 0 && !is_portal && ! wait) {
+            Entity portal = new Portal(width - 2, height - 2, Sprite.portal.getFxImage());
+            block.add(portal);
+            if (player.getX() / 32 == portal.getX() / 32 && player.getY() / 32 == portal.getY() / 32) {
+                wait = true;
+                waiting_time = System.currentTimeMillis();
+            }
+        }
+        waitToLevelUp();
+        updateSound();
     }
     public void render() { //CTN: vẽ các đối tượng đã được cập nhật lên khung hình.
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); //CTN: xóa bỏ khung hình trước đó
         block.forEach(g -> g.render(gc));
-        //stillObjects.forEach(g -> g.render(gc)); //CTN:  vẽ đối tượng trong stillObjects
-        //entities.forEach(g -> g.render(gc)); // CTN:vẽ đối tượng trong entities
+        enemy.forEach(g -> g.render(gc));
         player.render(gc);
     }
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
+    }
+
+    public void time() {
+        frame++;
+
+        long now = System.currentTimeMillis();
+        if (now - last_time > 1000) {
+            last_time = System.currentTimeMillis();
+            main_stage.setTitle("Bomberman by 404 NOT FOUND | " + frame + " frame");
+            frame = 0;
+
+            time.setText("Time: " + time_number);
+            time_number--;
+            if (time_number < 0) {
+                player.setLife(false);
+            }
+        }
     }
 }
 

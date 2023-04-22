@@ -9,7 +9,7 @@ public class Sprite {
 	
 	public static final int DEFAULT_SIZE = 16;
 	public static final int SCALED_SIZE = DEFAULT_SIZE * 2;
-    private static final int TRANSPARENT_COLOR = 0xffff00ff;
+    private static final int TRANSPARENT_COLOR = -65281;// 0xffff00ff;
 	public final int SIZE;
 	private int _x, _y;
 	public int[] _pixels;
@@ -17,9 +17,12 @@ public class Sprite {
 	protected int _realHeight;
 	private SpriteSheet _sheet;
 
+	// Đối tượng này tạo màu trong suốt trong đường viền của giao diện.
+	public static Sprite transparent = new Sprite(DEFAULT_SIZE, 15, 15,  SpriteSheet.tiles ,16, 16);
+
 	/*
 	|--------------------------------------------------------------------------
-	| Board sprites
+	| Board sprites: Tạo đối tượng cỏ, gạch, cổng, tường trong game
 	|--------------------------------------------------------------------------
 	 */
 	public static Sprite grass = new Sprite(DEFAULT_SIZE, 6, 0, SpriteSheet.tiles, 16, 16);
